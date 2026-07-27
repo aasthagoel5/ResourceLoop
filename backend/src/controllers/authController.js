@@ -4,32 +4,82 @@ const crypto = require("crypto");//used to generate random tokens for email veri
 const User = require("../models/User");
 const sendEmail =  require("../utils/sendEmail");//used to send emails for verification and password reset
 const { generateAccessToken, generateRefreshToken } = require("../utils/generateTokens");
+const Hospital = require("../models/Hospital");
+const NGO = require("../models/NGO");
 
 // @route  POST /api/auth/register
 // @desc   Register a new user
 exports.register = async (req, res) => {
-  try {
-    // Only pulling name, email, password from the request body.
-    // role is intentionally NOT taken from req.body — see note below.
-    const { name, email, password} = req.body;
+  try{
+    const { name, email, password, phone, location, role }=req.body;
 
-    // Check if a user with this email already exists
+    //Block anyone from self-registration as admin - admins are created manually/internally only
+    if(role == "admin"){
+      return res.status(403).json({message :"cannot register as admin"});
+    }
+
+    //only allow known roles; default to "individual" if none given
+    const allowedRoles = ["individual","hospital","ngo"];
+    const finalRole = allowedRoles.includes(role) ? role : "individual";
+
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ message: "User already exists" });
-    
-    // Hash the plain-text password before saving it
-    // "10" is the salt rounds — higher = more secure but slower
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    //Generate a random token for email verification
     const verificationToken = crypto.randomBytes(32).toString("hex");
-    const verificationTokenExpires =  Date.now()+60*60*1000; // 1 hour from now
+    const verificationTokenExpires = Date.now() + 60 * 60 * 1000;
 
-    // Create the user in the database
-    // role is NOT passed here, so it defaults to "user" from the schema.
-    // This stops anyone from registering themselves as "admin" via the API.
-    const user= await User.create({ name, email, password: hashedPassword, verificationToken, verificationTokenExpires, });
+    //Always create the Base user account first 
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      phone,
+      location,
+      role: finalRole,
+      verificationToken,
+      verificationTokenExpires,
+    });
 
+    //If this is a hospital or NGO , also creat their extra profile document
+    if (finalRole=="hospital"){
+      const { hospitalName, registrationNumber, address} = req.body;
+
+      if (!hospitalName || !registrationNumber || !address){
+        //Rollback the user we just created, since hospital signup is still incomplete
+        await User.findByIdAndDelete(user._id);
+        return res.status(400).json({
+          message : "hospitalName, registrationNumber, address are required field for the hpspital registration"
+        });
+      }
+      await Hospital.create({
+        userId: user._id,
+        hospitalName,
+        registrationNumber,
+        address,
+      });
+    }
+
+    if (finalRole === "ngo") {
+      const { organizationName, registrationId, address } = req.body;
+
+      if (!organizationName || !registrationId || !address) {
+        await User.findByIdAndDelete(user._id);
+        return res.status(400).json({
+          message: "organizationName, registrationId, and address are required for NGO registration",
+        });
+      }
+
+      await NGO.create({
+        userId: user._id,
+        organizationName,
+        registrationId,
+        address,
+      });
+    }
+
+     //Send verification email (same as before, for all roles)
     const verifyUrl = `http://localhost:5000/api/auth/verify-email/${verificationToken}`;
 
     await sendEmail(
@@ -41,13 +91,12 @@ exports.register = async (req, res) => {
        <p>This link expires in 1 hour.</p>`
     );
 
-
-
-
-    res.status(201).json({ message: "User registered. Please check your email to verify account.", userId: user._id });
+    res.status(201).json({
+      message: "User registered. Please check your email to verify account.",
+      userId: user._id,
+      role: finalRole,
+    });
   } catch (error) {
-
-    // Catch any unexpected errors (e.g. DB connection issues)
     res.status(500).json({ message: error.message });
   }
 };

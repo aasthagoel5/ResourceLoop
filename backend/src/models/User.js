@@ -3,16 +3,30 @@ const mongoose = require("mongoose");
 
 // Define the User schema
 const userschema = new mongoose.Schema({
-  name: {type: String,required: true},//every user will have a name
+  name: {
+    type: String,required: true
+  },//every user will have a name
+  email: {
+    type: String,required: true,unique: true
+  }, //prevents two users from having the same email
 
+  password: {
+    type: String,required: true
+  }, //hashed password
+  phone: {
+    type: String, //contact number
+  }, 
+  location: {
+    type: String, //can upgrade to lat/lng later for real map matching
+  },
+  profileImage: {
+    type: String, //will store a URL/path once you add image upload later
+  },
 
-  email: {type: String,required: true,unique: true}, //prevents two users from having the same email
-
-  password: {type: String,required: true}, //hashed password
-
-  role: {type: String, enum: ['user','ngo','hospital', 'admin'], //only these values are allowed
-
-  default: 'user'},//every new signup is a normal user unless changed by an admin
+  role: {
+    type: String, enum: ['individual','ngo','hospital', 'admin'], //only these values are allowed
+    default: 'user'
+  },//every new signup is a normal user unless changed by an admin
 
   //New fields for email verification
   isVerified:{
@@ -30,7 +44,7 @@ const userschema = new mongoose.Schema({
   resetPasswordExpires:{
     type: Date,
   },
-  refershToken:{
+  refreshToken:{
     type:String,
   },
   },
