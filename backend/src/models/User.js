@@ -47,6 +47,10 @@ const userschema = new mongoose.Schema({
   refreshToken:{
     type:String,
   },
+  trustScore:{
+    type: Number,
+    default:10, // every new user starts at 10 , as per trust score idea.
+  }
   },
   {timestamps: true});
 

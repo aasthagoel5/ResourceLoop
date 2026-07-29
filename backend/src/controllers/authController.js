@@ -159,10 +159,10 @@ exports.login = async (req, res) => {
 
    //Save the refersh token on the user document
    //so we can verify/revoke it later
-   user.refreshToken = refershToken;
+   user.refreshToken = refreshToken;
    await user.save();
 
-    res.status(200).json({ token, user: { id: user._id, name: user.name, role: user.role } });
+    res.status(200).json({ accessToken,refreshToken, user: { id: user._id, name: user.name, role: user.role } });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -287,7 +287,7 @@ exports.logout = async(req,res) => {
     return res.status(400).json({message : "No refresh token provided."});
   }
   //Find one user with thi refresh token and clear it
-  const user = await User.findOne({ refereshToken });
+  const user = await User.findOne({ refreshToken });
   if (user){
     user.refreshToken = undefined;
     await user.save();

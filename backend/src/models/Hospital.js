@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const hospitalschema = new mongoose.Schema({
+const hospitalSchema = new mongoose.Schema({
   // Links this Hospital profile to its corresponding User account
   // (where email, password, role="hospital" already live)
   userId:{
