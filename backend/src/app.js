@@ -4,7 +4,7 @@ const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const passport = require("./config/passport");
 const resourceRoutes = require("./routes/resourceRoutes");
-
+const requestRoutes = require("./routes/requestRoutes");
 
 //Middleware
 app.use(express.json());
@@ -14,6 +14,7 @@ app.use(passport.initialize());
 app.use("/api/auth", authRoutes);
 app.use("/api/admin/", adminRoutes);
 app.use("/api/resources", resourceRoutes);
+app.use("/api/requests", requestRoutes);
 
 //Test Result
 app.get('/', (req, res) => {
