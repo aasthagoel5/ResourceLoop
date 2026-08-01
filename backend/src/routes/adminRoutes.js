@@ -9,6 +9,8 @@ const {
   verifyHospital,
   getPendingNGOs,
   verifyNGO,
+  getPendingResources,
+  verifyResource,
 } = require("../controllers/adminController");
 
 // Every route below requires:
@@ -21,5 +23,8 @@ router.put("/hospitals/:id/verify", protect, authorizeRoles("admin"), verifyHosp
 
 router.get("/ngos/pending", protect, authorizeRoles("admin"), getPendingNGOs);
 router.put("/ngos/:id/verify", protect, authorizeRoles("admin"), verifyNGO);
+
+router.get("/resources/pending", protect, authorizeRoles("admin"), getPendingResources);
+router.put("/resources/:id/verify", protect, authorizeRoles("admin"), verifyResource);
 
 module.exports = router;

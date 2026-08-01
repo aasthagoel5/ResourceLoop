@@ -66,8 +66,8 @@ const resourceSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: ["available", "reserved", "completed"],
-    default: "available",
+    enum: ["pending", "available", "reserved", "completed", "rejected"],
+    default: "pending", //every resource starts pending admin approval
   },
 }, {
   timestamps: true,
