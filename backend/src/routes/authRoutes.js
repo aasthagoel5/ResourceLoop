@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { register, login, verifyEmail , forgotPassword, resetPassword, refreshToken, logout  } = require("../controllers/authController");
 const protect = require("../middleware/authMiddleware");
+const passport = require("../config/passport");
+const {generateAccessToken, generateRefreshToken } = require("../utils/generateTokens");
 
 // POST /api/auth/register -> calls register controller
 router.post("/register", register);
@@ -31,5 +33,48 @@ router.get("/profile", protect, (req, res) => {
     user: req.user, // contains { userId, role, iat, exp }
   });
 });
+
+
+
+// @route  GET /api/auth/google
+// @desc   Starts the Google login flow — redirects user to Google's login page
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"], session: false })
+);
+
+// @route  GET /api/auth/google/callback
+// @desc   Google redirects here after the user approves login
+router.get(
+  "/google/callback",
+  passport.authenticate("google",{ session:false, failureRedirect:"/login-failed" }),
+  async ( req, res ) => {
+    try{
+      // At this point, req.user is the User document Passport found/created
+      const user = req.user;
+
+      // Generate our own JWT tokens, exactly like normal login
+      const accessToken = generateAccessToken(user);
+      const refreshToken = generateRefreshToken(user);
+
+      user.refreshToken = refreshToken;
+      await user.save();
+
+      // For now (no frontend yet), just show the tokens as JSON.
+      // Later, once React exists, this would redirect to your frontend
+      // with the tokens attached, e.g.:
+      // res.redirect(`http://localhost:3000/oauth-success?accessToken=${accessToken}&refreshToken=${refreshToken}`
+      res.status(200).json({
+        message: "Google login successful",
+        accessToken,
+        refreshToken,
+        user: { id: user._id, name: user.name, role: user.role },
+      });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+
+    }
+);
 
 module.exports = router;

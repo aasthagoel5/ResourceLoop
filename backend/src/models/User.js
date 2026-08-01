@@ -11,7 +11,10 @@ const userschema = new mongoose.Schema({
   }, //prevents two users from having the same email
 
   password: {
-    type: String,required: true
+    type: String,
+    required: function () {
+      return this.authProvider == "local";
+    },
   }, //hashed password
   phone: {
     type: String, //contact number
@@ -25,7 +28,7 @@ const userschema = new mongoose.Schema({
 
   role: {
     type: String, enum: ['individual','ngo','hospital', 'admin'], //only these values are allowed
-    default: 'user'
+    default: 'individual',
   },//every new signup is a normal user unless changed by an admin
 
   //New fields for email verification
@@ -50,6 +53,11 @@ const userschema = new mongoose.Schema({
   trustScore:{
     type: Number,
     default:10, // every new user starts at 10 , as per trust score idea.
+  },
+  authProvider : {
+    type : String,
+    enum:["local","google"],
+    default:"local",
   }
   },
   {timestamps: true});

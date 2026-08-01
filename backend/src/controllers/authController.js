@@ -37,7 +37,8 @@ exports.register = async (req, res) => {
       password: hashedPassword,
       phone,
       location,
-      role: finalRole,
+      authProvider : "local",
+      role : finalRole,
       verificationToken,
       verificationTokenExpires,
     });
