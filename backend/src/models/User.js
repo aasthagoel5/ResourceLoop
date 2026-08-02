@@ -58,7 +58,11 @@ const userschema = new mongoose.Schema({
     type : String,
     enum:["local","google"],
     default:"local",
-  }
+  },
+  savedResources :[{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Resource",
+  },],
   },
   {timestamps: true});
 
