@@ -1,6 +1,6 @@
 const Hospital = require("../models/Hospital");
 const NGO = require("../models/NGO");
-const Resources = require("../models/Resources");
+const Resource = require("../models/Resources");
 
 
 // @route  GET /api/admin/hospitals/pending
@@ -83,7 +83,7 @@ exports.verifyNGO = async (req, res) => {
 // @desc   Get all resources awaiting admin approval
 exports.getPendingResources = async (req, res) => {
   try {
-    const resources = await Resources.find({ status: "pending" })
+    const resources = await Resource.find({ status: "pending" })
       .populate("donorId", "name email phone");
 
       res.status(200).json({ count: resources.length, resources });
@@ -103,7 +103,7 @@ exports.verifyResource = async (req, res) => {
       return res.status(400).json({ message: "Status must be 'available' or 'rejected'" });
     }
 
-    const resource = await Resources.findById(id);
+    const resource = await Resource.findById(id);
     if (!resource) {
       return res.status(404).json({ message: "Resource not found" });
     }
