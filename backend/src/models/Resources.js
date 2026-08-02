@@ -60,9 +60,19 @@ const resourceSchema = new mongoose.Schema({
   },
 
   location: {
+  type: {
     type: String,
+    enum: ["Point"],
+    default: "Point",
+  },
+  coordinates: {
+    type: [Number], // [longitude, latitude] — MongoDB requires this exact order
     required: true,
   },
+  address: {
+    type: String, // human-readable text, e.g. "Jaipur, Rajasthan" — for display purposes
+  },
+},
 
   status: {
     type: String,
@@ -73,5 +83,6 @@ const resourceSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+resourceSchema.index({ location: "2dsphere" }); // enables geospatial queries
 module.exports = mongoose.model("Resource", resourceSchema);
 

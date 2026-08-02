@@ -20,8 +20,18 @@ const userschema = new mongoose.Schema({
     type: String, //contact number
   }, 
   location: {
-    type: String, //can upgrade to lat/lng later for real map matching
+  type: {
+    type: String,
+    enum: ["Point"],
+    default: "Point",
   },
+  coordinates: {
+    type: [Number],
+  },
+  address: {
+    type: String,
+  },
+},
   profileImage: {
     type: String, //will store a URL/path once you add image upload later
   },
@@ -68,4 +78,5 @@ const userschema = new mongoose.Schema({
 
 
   //compile the schema into a model so we can query/create users in the database
+userschema.index({ location: "2dsphere" }); // enables geospatial queries
 module.exports = mongoose.model("User", userschema);

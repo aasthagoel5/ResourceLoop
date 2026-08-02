@@ -17,11 +17,13 @@ exports.createResource = async (req, res) => {
       bloodGroup,
       condition,
       expiryDate,
-      location,
+      latitude,
+      longitude,
+      address,
     }=req.body;
 
     //Basic Validation
-    if (!title || !category || !listingType || !quantity || !location){
+    if (!title || !category || !listingType || !quantity || !latitude || !longitude ){
       return res.status(400).json({ message: "Please provide all required fields." });
     }
 
@@ -72,7 +74,11 @@ exports.createResource = async (req, res) => {
       bloodGroup,
       condition,
       expiryDate,
-      location,
+      location:{
+        type: "Point",
+        coordinates: ["latitude", "longitude"],
+        address,
+      }
     });
 
     res.status(201).json({ message: "Resource listed successfully", resource });
@@ -87,12 +93,11 @@ exports.createResource = async (req, res) => {
 exports.getAllResources = async (req, res) => {
   try {
     // Optional filters via query params, e.g. /api/resources?category=blood&location=Jaipur
-    const { category, location, listingType, status } = req.query;
+    const { category, listingType, status } = req.query;
 
     const filter = {};
     if (category) filter.category = category;
     if (listingType) filter.listingType = listingType;
-    if (location) filter.location = location;
     filter.status = status || "available"; // default to only showing available resources
 
     const resources = await Resource.find(filter)

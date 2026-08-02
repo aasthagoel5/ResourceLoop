@@ -12,11 +12,13 @@ exports.createRequest = async (req, res) => {
        equipmentType,
        medicineName,
        urgency,
-       location,
+       latitude,
+       longitude,
+       address,
        } = req.body;
 
     // Validate required fields
-    if (!resourceType || !title || !location) {
+    if (!resourceType || !title || !latitude || !longitude) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -30,7 +32,11 @@ exports.createRequest = async (req, res) => {
       equipmentType,
       medicineName,
       urgency: urgency || "medium",
-      location,
+      location:{
+        type: "Point",
+        coordinates: ["latitude", "longitude"],
+        address,
+      }
     });
 
     res.status(201).json({ message: "Request created successfully", request });
@@ -43,13 +49,11 @@ exports.createRequest = async (req, res) => {
 // @desc   Get all open requests (public — donors/hospitals/NGOs can browse these)
 exports.getAllRequests = async (req, res) => {
   try {
-    const { resourceType, location, urgency } = req.query;
-
+    const { resourceType, urgency, status } = req.query;
     const filter = {}; 
     if (resourceType) filter.resourceType = resourceType;
-    if (location) filter.location = location;
     if (urgency) filter.urgency = urgency;
-    filter.status = "open"; // Only show open requests
+    filter.status =status || "open"; // Only show open requests
 
     const requests = await Request.find(filter)
       .populate("requesterId", "name location") // include requester's name and location

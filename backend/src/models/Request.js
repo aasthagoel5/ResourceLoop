@@ -47,9 +47,19 @@ const requestSchema = new mongoose.Schema({
   },
 
   location: {
+  type: {
     type: String,
+    enum: ["Point"],
+    default: "Point",
+  },
+  coordinates: {
+    type: [Number], // [longitude, latitude]
     required: true,
   },
+  address: {
+    type: String,
+  },
+},
 
   status: {
     type: String,
@@ -60,4 +70,5 @@ const requestSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+requestSchema.index({ location: "2dsphere" });
 module.exports = mongoose.model("Request", requestSchema);
