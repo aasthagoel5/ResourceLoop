@@ -34,7 +34,7 @@ exports.createRequest = async (req, res) => {
       urgency: urgency || "medium",
       location:{
         type: "Point",
-        coordinates: ["latitude", "longitude"],
+        coordinates: [longitude, latitude],
         address,
       }
     });

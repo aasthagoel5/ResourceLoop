@@ -76,7 +76,7 @@ exports.createResource = async (req, res) => {
       expiryDate,
       location:{
         type: "Point",
-        coordinates: ["latitude", "longitude"],
+        coordinates: [longitude, latitude],
         address,
       }
     });
