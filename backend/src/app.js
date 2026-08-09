@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const passport = require("./config/passport");
@@ -14,6 +15,8 @@ const reportRoutes = require("./routes/reportRoutes");
 
 //Middleware
 app.use(express.json());
+app.use(cors({
+  origin: "http://localhost:5173", credentials: true,}));
 app.use(passport.initialize());
 
 // Any request starting with /api/auth will be handled by authRoutes
