@@ -10,6 +10,7 @@ const userRoutes = require("./routes/userRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const reportRoutes = require("./routes/reportRoutes");
 
 //Middleware
 app.use(express.json());
@@ -25,6 +26,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/reports", reportRoutes);
 
 //Test Result
 app.get('/', (req, res) => {

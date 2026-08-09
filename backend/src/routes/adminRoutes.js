@@ -11,6 +11,11 @@ const {
   verifyNGO,
   getPendingResources,
   verifyResource,
+  getAllUsers,
+  deleteUser,
+  getReports,
+  resolveReport,
+  getRecentActivity,
 } = require("../controllers/adminController");
 
 // Every route below requires:
@@ -26,5 +31,11 @@ router.put("/ngos/:id/verify", protect, authorizeRoles("admin"), verifyNGO);
 
 router.get("/resources/pending", protect, authorizeRoles("admin"), getPendingResources);
 router.put("/resources/:id/verify", protect, authorizeRoles("admin"), verifyResource);
+
+router.get("/users", protect, authorizeRoles("admin"), getAllUsers);
+router.delete("/users/:id", protect, authorizeRoles("admin"), deleteUser);
+router.get("/reports", protect, authorizeRoles("admin"), getReports);
+router.put("/reports/:id", protect, authorizeRoles("admin"), resolveReport);
+router.get("/activity", protect, authorizeRoles("admin"), getRecentActivity);
 
 module.exports = router;
