@@ -1,6 +1,7 @@
 const Donation = require("../models/Donation");
 const Request = require("../models/Request");
 const Resource = require("../models/Resources");
+const notify = require("../utils/notify");
 
 // @route  POST /api/donations
 // @desc   Create a new donation record
@@ -58,6 +59,14 @@ exports.createDonation = async (req, res) => {
       request.status = "matched";
       await request.save();
     }
+
+    await notify({
+      userId: receiverId,
+      message: `${req.user.name || "A donor"} wants to donate "${resource.title}" to you.`,
+      type: "donation",
+      relatedId: donation._id,
+      emailSubject: "You have a new donation offer on ResourceLoop",
+    });
 
     res.status(201).json({ message: "Donation created successfully", donation });
   } catch (error) {
@@ -119,6 +128,14 @@ exports.completeDonation = async (req, res) => {
         await request.save();
       }
     }
+
+    await notify({
+      userId: donation.receiverId,
+      message: `Your donation "${resource?.title || "item"}" has been marked as completed.`,
+      type: "donation",
+      relatedId: donation._id,
+      emailSubject: "Your ResourceLoop donation is complete",
+    });
 
     res.status(200).json({ message: "Donation marked as completed", donation });
   } catch (error) {

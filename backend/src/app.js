@@ -9,7 +9,7 @@ const donationRoutes = require("./routes/donationRoutes");
 const userRoutes = require("./routes/userRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
-
+const notificationRoutes = require("./routes/notificationRoutes");
 
 //Middleware
 app.use(express.json());
@@ -24,6 +24,7 @@ app.use("/api/donations", donationRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 //Test Result
 app.get('/', (req, res) => {

@@ -1,6 +1,7 @@
 const Hospital = require("../models/Hospital");
 const NGO = require("../models/NGO");
 const Resource = require("../models/Resources");
+const notify = require("../utils/notify");
 
 
 // @route  GET /api/admin/hospitals/pending
@@ -33,6 +34,14 @@ exports.verifyHospital = async (req, res) => {
 
     hospital.verificationStatus = status;
     await hospital.save();
+
+    await notify({
+      userId: hospital.userId,
+      message: `Your hospital account has been ${status} by an admin.`,
+      type: "verification",
+      relatedId: hospital._id,
+      emailSubject: `Your ResourceLoop hospital account was ${status}`,
+  });
 
     res.status(200).json({ message: `Hospital ${status} successfully`, hospital });
   } catch (error) {
@@ -73,6 +82,14 @@ exports.verifyNGO = async (req, res) => {
     ngo.verificationStatus = status;
     await ngo.save();
 
+    await notify({
+      userId: ngo.userId,
+      message: `Your NGO account has been ${status} by an admin.`,
+      type: "verification",
+      relatedId: ngo._id,
+      emailSubject: `Your ResourceLoop NGO account was ${status}`,
+    });
+
     res.status(200).json({ message: `NGO ${status} successfully`, ngo });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -110,6 +127,14 @@ exports.verifyResource = async (req, res) => {
 
     resource.status = status;
     await resource.save();
+
+    await notify({
+      userId: resource.donorId,
+      message: `Your resource listing "${resource.title}" has been ${status} by an admin.`,
+      type: "resource",
+      relatedId: resource._id,
+      emailSubject: `Your ResourceLoop listing was ${status}`,
+    });
 
     res.status(200).json({ message: `Resource ${status} successfully`, resource });
   } catch (error) {
