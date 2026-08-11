@@ -7,7 +7,10 @@ const userschema = new mongoose.Schema({
     type: String,required: true
   },//every user will have a name
   email: {
-    type: String,required: true,unique: true
+    type: String,
+    required: true,
+    unique: true,
+     match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"],
   }, //prevents two users from having the same email
 
   password: {

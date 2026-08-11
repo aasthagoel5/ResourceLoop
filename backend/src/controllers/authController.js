@@ -13,6 +13,12 @@ exports.register = async (req, res) => {
   try{
     const { name, email, password, phone, location, role }=req.body;
 
+    //Basic email format check, before touching the database
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Please enter a valid email address" });
+    }
+
     //Block anyone from self-registration as admin - admins are created manually/internally only
     if(role == "admin"){
       return res.status(403).json({message :"cannot register as admin"});

@@ -8,6 +8,9 @@ import ResetPassword from "@/pages/ResetPassword";
 import OAuthSuccess from "@/pages/OAuthSuccess";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import BrowseResources from "./pages/BrowseResources";
+import CreateResource from "./pages/CreateResources";
+import ResourceDetail from "./pages/ResourceDetail";
 
 function Home() {
   const { user } = useAuth();
@@ -103,6 +106,9 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/oauth-success" element={<OAuthSuccess />} />
+        <Route path="/resources" element={<BrowseResources />} />
+        <Route path="/resources/new" element={<CreateResource />} />
+        <Route path="/resources/:id" element={<ResourceDetail />} />
       </Routes>
     </>
   );
