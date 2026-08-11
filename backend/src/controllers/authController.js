@@ -81,7 +81,7 @@ exports.register = async (req, res) => {
     }
 
      //Send verification email (same as before, for all roles)
-    const verifyUrl = `http://localhost:5000/api/auth/verify-email/${verificationToken}`;
+    const verifyUrl = `http://localhost:5173/verify-email/${verificationToken}`;
 
     await sendEmail(
       user.email,
@@ -190,7 +190,7 @@ exports.forgotPassword = async (req, res) => {
     user.resetPasswordExpires = resetPasswordExpires;
     await user.save();
     
-    const resetUrl= `http://localhost:5000/api/auth/reset-password/${resetToken}`;
+    const resetUrl= `http://localhost:5173/reset-password/${resetToken}`;
 
     await sendEmail(
       user.email,

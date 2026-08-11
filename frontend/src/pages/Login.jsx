@@ -57,6 +57,12 @@ function Login() {
                 placeholder="you@example.com"
                 required
               />
+              <Link
+                to="/forgot-password"
+                className="text-sm text-blue-600 hover:underline block text-right"
+              >
+                Forgot password?
+              </Link>
             </div>
 
             <div className="space-y-2">
@@ -81,6 +87,26 @@ function Login() {
               {loading ? "Logging in..." : "Log In"}
             </Button>
           </form>
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-slate-200" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-slate-400">
+                Or continue with
+              </span>
+            </div>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={() => {
+              window.location.href = "http://localhost:5000/api/auth/google";
+            }}
+          >
+            Sign in with Google
+          </Button>
           <p className="text-sm text-center text-slate-500 mt-4">
             Don't have an account?{" "}
             <Link to="/register" className="text-blue-600 hover:underline">

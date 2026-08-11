@@ -64,14 +64,11 @@ router.get(
       // Later, once React exists, this would redirect to your frontend
       // with the tokens attached, e.g.:
       // res.redirect(`http://localhost:3000/oauth-success?accessToken=${accessToken}&refreshToken=${refreshToken}`
-      res.status(200).json({
-        message: "Google login successful",
-        accessToken,
-        refreshToken,
-        user: { id: user._id, name: user.name, role: user.role },
-      });
+      res.redirect(
+        `http://localhost:5173/oauth-success?accessToken=${accessToken}&refreshToken=${refreshToken}`
+      )
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.redirect(`http://localhost:5173/login?error=oauth_failed`);
     }
 
     }
