@@ -59,6 +59,12 @@ function Navbar() {
               >
                 Hi, {user.name.split(" ")[0]}
               </Link>
+              <Link
+                to="/nearby"
+                className="hover:text-brand-600 transition-colors"
+              >
+                Near Me
+              </Link>
             </>
           )}
         </nav>

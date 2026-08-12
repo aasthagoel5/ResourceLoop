@@ -4,6 +4,7 @@ import api from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import LocationPicker from "@/components/LocationPicker";
 
 function CreateResource() {
   const [formData, setFormData] = useState({
@@ -33,6 +34,12 @@ function CreateResource() {
     e.preventDefault();
     setError("");
     setLoading(true);
+
+    if (!formData.latitude || !formData.longitude) {
+      setError("Please select a location on the map.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const payload = {
@@ -239,38 +246,22 @@ function CreateResource() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="latitude">Latitude</Label>
-              <Input
-                id="latitude"
-                name="latitude"
-                type="number"
-                step="any"
-                placeholder="26.9124"
-                value={formData.latitude}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="longitude">Longitude</Label>
-              <Input
-                id="longitude"
-                name="longitude"
-                type="number"
-                step="any"
-                placeholder="75.7873"
-                value={formData.longitude}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="space-y-2">
+            <Label>Pick Location</Label>
+            <LocationPicker
+              latitude={formData.latitude ? Number(formData.latitude) : null}
+              longitude={formData.longitude ? Number(formData.longitude) : null}
+              onChange={(lat, lng) =>
+                setFormData({ ...formData, latitude: lat, longitude: lng })
+              }
+            />
+            {formData.latitude && formData.longitude && (
+              <p className="text-xs text-slate-400">
+                Selected: {formData.latitude.toFixed(4)},{" "}
+                {formData.longitude.toFixed(4)}
+              </p>
+            )}
           </div>
-          <p className="text-xs text-slate-400">
-            Tip: search "[your city] coordinates" on Google to find lat/lng.
-            We'll add a map picker later.
-          </p>
 
           {error && (
             <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-2">
