@@ -11,28 +11,33 @@ const urgencyBadge = {
 
 function RequestCard({ request }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5">
-      <div className="flex items-center justify-between mb-2">
-        <span
-          className={`text-xs font-medium px-2 py-1 rounded-full ${urgencyBadge[request.urgency]}`}
-        >
-          {request.urgency}
-        </span>
-        <span className="text-xs text-slate-400 capitalize">
-          {request.resourceType}
-        </span>
+    <Link
+      to={`/requests/${request._id}`}
+      className="block rounded-xl border border-slate-200 bg-white p-5 hover:shadow-md transition-shadow"
+    >
+      <div className="rounded-xl border border-slate-200 bg-white p-5">
+        <div className="flex items-center justify-between mb-2">
+          <span
+            className={`text-xs font-medium px-2 py-1 rounded-full ${urgencyBadge[request.urgency]}`}
+          >
+            {request.urgency}
+          </span>
+          <span className="text-xs text-slate-400 capitalize">
+            {request.resourceType}
+          </span>
+        </div>
+        <h3 className="font-semibold text-slate-900 mb-1">{request.title}</h3>
+        {request.description && (
+          <p className="text-sm text-slate-500 mb-2">{request.description}</p>
+        )}
+        <p className="text-sm text-slate-400">
+          📍 {request.location?.address || "Location not specified"}
+        </p>
+        <p className="text-xs text-slate-400 mt-2">
+          Requested by {request.requesterId?.name || "Unknown"}
+        </p>
       </div>
-      <h3 className="font-semibold text-slate-900 mb-1">{request.title}</h3>
-      {request.description && (
-        <p className="text-sm text-slate-500 mb-2">{request.description}</p>
-      )}
-      <p className="text-sm text-slate-400">
-        📍 {request.location?.address || "Location not specified"}
-      </p>
-      <p className="text-xs text-slate-400 mt-2">
-        Requested by {request.requesterId?.name || "Unknown"}
-      </p>
-    </div>
+    </Link>
   );
 }
 

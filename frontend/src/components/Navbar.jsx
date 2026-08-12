@@ -47,6 +47,12 @@ function Navbar() {
               >
                 Requests
               </Link>
+              <Link
+                to="/donations"
+                className="hover:text-brand-600 transition-colors"
+              >
+                My Donations
+              </Link>
             </>
           )}
         </nav>
