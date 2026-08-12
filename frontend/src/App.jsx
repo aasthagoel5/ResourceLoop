@@ -17,6 +17,7 @@ import RequestDetail from "./pages/RequestDetail";
 import MyDonations from "./pages/MyDonations";
 import Profile from "./pages/Profile";
 import NearbySearch from "./pages/NearbySearch";
+import Dashboard from "./pages/Dashboard";
 
 function Home() {
   const { user } = useAuth();
@@ -121,6 +122,7 @@ function App() {
         <Route path="/donations" element={<MyDonations />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/nearby" element={<NearbySearch />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </>
   );
