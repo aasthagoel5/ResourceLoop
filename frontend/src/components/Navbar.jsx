@@ -41,6 +41,12 @@ function Navbar() {
               >
                 Dashboard
               </Link>
+              <Link
+                to="/requests"
+                className="hover:text-brand-600 transition-colors"
+              >
+                Requests
+              </Link>
             </>
           )}
         </nav>

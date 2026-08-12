@@ -11,6 +11,8 @@ import Navbar from "./components/Navbar";
 import BrowseResources from "./pages/BrowseResources";
 import CreateResource from "./pages/CreateResources";
 import ResourceDetail from "./pages/ResourceDetail";
+import BrowseRequests from "@/pages/BrowseRequests";
+import CreateRequest from "@/pages/CreateRequest";
 
 function Home() {
   const { user } = useAuth();
@@ -109,6 +111,8 @@ function App() {
         <Route path="/resources" element={<BrowseResources />} />
         <Route path="/resources/new" element={<CreateResource />} />
         <Route path="/resources/:id" element={<ResourceDetail />} />
+        <Route path="/requests" element={<BrowseRequests />} />
+        <Route path="/requests/new" element={<CreateRequest />} />
       </Routes>
     </>
   );
