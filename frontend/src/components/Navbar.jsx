@@ -66,6 +66,14 @@ function Navbar() {
               >
                 Near Me
               </Link>
+              {user?.role === "admin" && (
+                <Link
+                  to="/admin"
+                  className="hover:text-brand-600 transition-colors"
+                >
+                  Admin
+                </Link>
+              )}
             </>
           )}
         </nav>

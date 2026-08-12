@@ -8,16 +8,17 @@ import ResetPassword from "@/pages/ResetPassword";
 import OAuthSuccess from "@/pages/OAuthSuccess";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import BrowseResources from "./pages/BrowseResources";
-import CreateResource from "./pages/CreateResources";
-import ResourceDetail from "./pages/ResourceDetail";
+import BrowseResources from "@/pages/BrowseResources";
+import CreateResource from "@/pages/CreateResources";
+import ResourceDetail from "@/pages/ResourceDetail";
 import BrowseRequests from "@/pages/BrowseRequests";
 import CreateRequest from "@/pages/CreateRequest";
-import RequestDetail from "./pages/RequestDetail";
-import MyDonations from "./pages/MyDonations";
-import Profile from "./pages/Profile";
-import NearbySearch from "./pages/NearbySearch";
-import Dashboard from "./pages/Dashboard";
+import RequestDetail from "@/pages/RequestDetail";
+import MyDonations from "@/pages/MyDonations";
+import Profile from "@/pages/Profile";
+import NearbySearch from "@/pages/NearbySearch";
+import Dashboard from "@/pages/Dashboard";
+import AdminPanel from "@/pages/AdminPanel";
 
 function Home() {
   const { user } = useAuth();
@@ -123,6 +124,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/nearby" element={<NearbySearch />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </>
   );
