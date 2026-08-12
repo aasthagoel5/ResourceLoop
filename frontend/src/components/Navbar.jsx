@@ -53,6 +53,12 @@ function Navbar() {
               >
                 My Donations
               </Link>
+              <Link
+                to="/profile"
+                className="text-sm text-slate-600 hover:text-brand-600 hidden sm:inline"
+              >
+                Hi, {user.name.split(" ")[0]}
+              </Link>
             </>
           )}
         </nav>

@@ -15,6 +15,7 @@ import BrowseRequests from "@/pages/BrowseRequests";
 import CreateRequest from "@/pages/CreateRequest";
 import RequestDetail from "./pages/RequestDetail";
 import MyDonations from "./pages/MyDonations";
+import Profile from "./pages/Profile";
 
 function Home() {
   const { user } = useAuth();
@@ -117,6 +118,7 @@ function App() {
         <Route path="/requests/new" element={<CreateRequest />} />
         <Route path="/requests/:id" element={<RequestDetail />} />
         <Route path="/donations" element={<MyDonations />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </>
   );
