@@ -6,6 +6,7 @@ const protect = require("../middleware/authMiddleware");
 const {
   createDonation,
   getMyDonations,
+  acceptDonation,
   completeDonation,
   cancelDonation,
 } = require("../controllers/donationController");
@@ -16,5 +17,7 @@ router.get("/",protect, getMyDonations);
 
 router.put("/:id/complete",protect, completeDonation);
 router.put("/:id/cancel",protect, cancelDonation);
+
+router.put("/:id/accept", protect, acceptDonation);
 
 module.exports = router;

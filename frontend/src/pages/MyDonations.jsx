@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const statusColor = {
   pending: "bg-amber-100 text-amber-700",
+  accepted: "bg-blue-100 text-blue-700",
   completed: "bg-emerald-100 text-emerald-700",
   cancelled: "bg-slate-100 text-slate-500",
 };
@@ -35,6 +36,15 @@ function MyDonations() {
       fetchDonations();
     } catch (error) {
       alert(error.response?.data?.message || "Failed to complete donation.");
+    }
+  };
+
+  const handleAccept = async (id) => {
+    try {
+      await api.put(`/donations/${id}/accept`);
+      fetchDonations();
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to accept donation.");
     }
   };
 
@@ -90,7 +100,28 @@ function MyDonations() {
                       : `From: ${d.donorId?.name || "Unknown"}`}
                   </p>
 
+                  {d.status === "pending" && !isDonor && (
+                    <div className="flex gap-2">
+                      <Button size="sm" onClick={() => handleAccept(d._id)}>
+                        Accept
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleCancel(d._id)}
+                      >
+                        Decline
+                      </Button>
+                    </div>
+                  )}
+
                   {d.status === "pending" && isDonor && (
+                    <p className="text-xs text-slate-400 italic">
+                      Waiting for receiver to accept...
+                    </p>
+                  )}
+
+                  {d.status === "accepted" && isDonor && (
                     <div className="flex gap-2">
                       <Button size="sm" onClick={() => handleComplete(d._id)}>
                         Mark Completed
@@ -103,6 +134,12 @@ function MyDonations() {
                         Cancel
                       </Button>
                     </div>
+                  )}
+
+                  {d.status === "accepted" && !isDonor && (
+                    <p className="text-xs text-slate-400 italic">
+                      Accepted — waiting for donor to complete.
+                    </p>
                   )}
                 </div>
               );

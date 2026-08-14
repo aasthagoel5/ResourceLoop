@@ -106,10 +106,9 @@ exports.completeDonation = async (req, res) => {
       return res.status(403).json({ message: "Only the donor can mark this donation as completed" });
     }
 
-    if (donation.status !== "pending") {
-      return res.status(400).json({ message: `Donation is already '${donation.status}'` });
+    if (donation.status !== "accepted") {
+  return res.status(400).json({ message: "Donation must be accepted by the receiver before it can be marked completed" });
     }
-
     donation.status = "completed";
     await donation.save();
 
@@ -187,3 +186,29 @@ exports.cancelDonation = async (req, res) => {
   }
 };
 
+// @route  PUT /api/donations/:id/accept
+// @desc   Receiver accepts a pending donation offer
+exports.acceptDonation = async (req, res) => {
+  try {
+    const donation = await Donation.findById(req.params.id);
+
+    if (!donation) {
+      return res.status(404).json({ message: "Donation not found" });
+    }
+
+    if (donation.receiverId.toString() !== req.user.userId) {
+      return res.status(403).json({ message: "Only the receiver can accept this offer" });
+    }
+
+    if (donation.status !== "pending") {
+      return res.status(400).json({ message: `Donation is already '${donation.status}'` });
+    }
+
+    donation.status = "accepted";
+    await donation.save();
+
+    res.status(200).json({ message: "Donation accepted", donation });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

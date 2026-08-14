@@ -22,11 +22,18 @@ function OAuthSuccess() {
 
   const fetchUserAndLogin = async (accessToken, refreshToken) => {
     try {
-      // Temporarily store the access token so this request can use it
       localStorage.setItem("accessToken", accessToken);
 
       const response = await api.get("/users/me");
-      login(response.data.user, accessToken, refreshToken);
+      const u = response.data.user;
+
+      // Normalize to the same shape used by normal email/password login,
+      // so "id" is always available consistently across the app
+      login(
+        { id: u._id, name: u.name, role: u.role },
+        accessToken,
+        refreshToken,
+      );
       navigate("/");
     } catch (error) {
       navigate("/login");
