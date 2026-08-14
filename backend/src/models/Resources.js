@@ -79,6 +79,11 @@ const resourceSchema = new mongoose.Schema({
     enum: ["pending", "available", "reserved", "completed", "rejected"],
     default: "pending", //every resource starts pending admin approval
   },
+  images: [
+  {
+    type: String, // Cloudinary URLs
+  },
+],
 }, {
   timestamps: true,
 });

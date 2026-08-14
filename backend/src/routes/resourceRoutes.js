@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
+const { uploadResourceImages } = require("../middleware/upload");
+
+
 const protect = require("../middleware/authMiddleware");
 
 const {
@@ -16,7 +19,7 @@ router.get("/", getAllResources);
 router.get("/:id", getResourceById);
 
 // Protected routes — must be logged in
-router.post("/", protect, createResource);
+router.post("/", protect, uploadResourceImages.array("images", 5), createResource);
 router.put("/:id", protect, updateResource);
 router.delete("/:id", protect, deleteResource);
 

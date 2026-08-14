@@ -52,6 +52,12 @@ exports.createResource = async (req, res) => {
           message: "Your account must be verified by an admin before listing medicines",
         });
       }
+      // Photos are mandatory for equipment and medicine listings
+      if ((category === "equipment" || category === "medicine") && (!req.files || req.files.length === 0)) {
+        return res.status(400).json({
+          message: "At least one photo is required for equipment and medicine listings",
+        });
+      }
     }
       // Business rule: sell listings need a price, lend listings need a deposit
     if (listingType === "sell" && (!price || price <= 0)) {
@@ -60,6 +66,9 @@ exports.createResource = async (req, res) => {
     if (listingType === "lend" && (securityDeposit === undefined || securityDeposit < 0)) {
       return res.status(400).json({ message: "A valid security deposit is required for lend listings" });
     }
+
+    // req.files comes from the uploadResourceImages middleware — an array of uploaded files
+    const imageUrls = req.files ? req.files.map((file) => file.path) : [];
     
 
     const resource = await Resource.create({
@@ -74,6 +83,7 @@ exports.createResource = async (req, res) => {
       bloodGroup,
       condition,
       expiryDate,
+      images : imageUrls,
       location:{
         type: "Point",
         coordinates: [longitude, latitude],
@@ -83,8 +93,9 @@ exports.createResource = async (req, res) => {
 
     res.status(201).json({ message: "Resource listed successfully", resource });
   } catch (error) {
-    res.status(500).json({ message: error.message });
-  } 
+  console.error("CREATE RESOURCE ERROR:", error);
+  res.status(500).json({ message: error.message });
+}
 };
 
     

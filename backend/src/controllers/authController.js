@@ -65,6 +65,7 @@ exports.register = async (req, res) => {
         hospitalName,
         registrationNumber,
         address,
+        verificationDocuments: req.file ? req.file.path : undefined,
       });
     }
 
@@ -83,6 +84,7 @@ exports.register = async (req, res) => {
         organizationName,
         registrationId,
         address,
+        verificationDocuments: req.file ? req.file.path : undefined,
       });
     }
 

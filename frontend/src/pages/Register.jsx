@@ -25,8 +25,13 @@ function Register() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [document, setDocument] = useState(null);
 
   const navigate = useNavigate();
+
+  const handleDocumentChange = (e) => {
+    setDocument(e.target.files[0]);
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,29 +45,33 @@ function Register() {
 
     try {
       // Build the payload based on selected role — only send relevant fields
-      const payload = {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phone,
-        location: formData.location,
-        role,
-      };
+      const payload = new FormData();
+      payload.append("name", formData.name);
+      payload.append("email", formData.email);
+      payload.append("password", formData.password);
+      payload.append("phone", formData.phone);
+      payload.append("location", formData.location);
+      payload.append("role", role);
 
       if (role === "hospital") {
-        payload.hospitalName = formData.hospitalName;
-        payload.registrationNumber = formData.registrationNumber;
-        payload.address = formData.address;
+        payload.append("hospitalName", formData.hospitalName);
+        payload.append("registrationNumber", formData.registrationNumber);
+        payload.append("address", formData.address);
       }
 
       if (role === "ngo") {
-        payload.organizationName = formData.organizationName;
-        payload.registrationId = formData.registrationId;
-        payload.address = formData.address;
+        payload.append("organizationName", formData.organizationName);
+        payload.append("registrationId", formData.registrationId);
+        payload.append("address", formData.address);
       }
 
-      const response = await api.post("/auth/register", payload);
-      setSuccess(response.data.message);
+      if (document) {
+        payload.append("document", document);
+      }
+
+      const response = await api.post("/auth/register", payload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       // Give the user a moment to read the success message, then redirect to login
       setTimeout(() => navigate("/login"), 3000);
@@ -192,6 +201,23 @@ function Register() {
                 required
               />
             </div>
+            {(role === "hospital" || role === "ngo") && (
+              <div className="space-y-2">
+                <Label htmlFor="document">Verification Document</Label>
+                <input
+                  id="document"
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={handleDocumentChange}
+                  className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100"
+                  required
+                />
+                <p className="text-xs text-slate-400">
+                  Upload your registration certificate (image or PDF) for admin
+                  review.
+                </p>
+              </div>
+            )}
           </>
         )}
 
@@ -228,6 +254,23 @@ function Register() {
                 required
               />
             </div>
+            {(role === "hospital" || role === "ngo") && (
+              <div className="space-y-2">
+                <Label htmlFor="document">Verification Document</Label>
+                <input
+                  id="document"
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={handleDocumentChange}
+                  className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100"
+                  required
+                />
+                <p className="text-xs text-slate-400">
+                  Upload your registration certificate (image or PDF) for admin
+                  review.
+                </p>
+              </div>
+            )}
           </>
         )}
 

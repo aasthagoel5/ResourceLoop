@@ -16,12 +16,20 @@ function ResourceCard({ resource }) {
       to={`/resources/${resource._id}`}
       className="block rounded-xl border border-slate-200 bg-white overflow-hidden hover:shadow-md transition-shadow"
     >
-      <div className="h-36 bg-gradient-to-br from-brand-50 to-brand-100 flex items-center justify-center text-4xl">
-        {resource.category === "blood"
-          ? "🩸"
-          : resource.category === "medicine"
-            ? "💊"
-            : "🦽"}
+      <div className="h-36 bg-gradient-to-br from-brand-50 to-brand-100 flex items-center justify-center text-4xl overflow-hidden">
+        {resource.images && resource.images.length > 0 ? (
+          <img
+            src={resource.images[0]}
+            alt={resource.title}
+            className="w-full h-full object-cover"
+          />
+        ) : resource.category === "blood" ? (
+          "🩸"
+        ) : resource.category === "medicine" ? (
+          "💊"
+        ) : (
+          "🦽"
+        )}
       </div>
       <div className="p-4">
         <div className="flex items-center justify-between mb-2">

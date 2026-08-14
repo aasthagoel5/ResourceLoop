@@ -36,6 +36,9 @@ const ngoSchema = new mongoose.Schema({
     enum: ["pending", "verified", "rejected"],
     default: "pending",
   },
+  verificationDocuments: {
+  type: String, // Cloudinary URL to the uploaded document
+},
 }, {
   timestamps: true,
 });

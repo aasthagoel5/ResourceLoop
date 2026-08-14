@@ -18,7 +18,7 @@ function ResourceDetail() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
-
+  const [activeImage, setActiveImage] = useState(0);
   useEffect(() => {
     fetchResource();
   }, [id]);
@@ -31,6 +31,16 @@ function ResourceDetail() {
       console.error("Failed to fetch resource:", error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm("Delete this listing permanently?")) return;
+    try {
+      await api.delete(`/resources/${id}`);
+      navigate("/resources");
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to delete listing.");
     }
   };
 
@@ -77,13 +87,43 @@ function ResourceDetail() {
         </button>
 
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="h-56 bg-gradient-to-br from-brand-50 to-brand-100 flex items-center justify-center text-6xl">
-            {resource.category === "blood"
-              ? "🩸"
-              : resource.category === "medicine"
-                ? "💊"
-                : "🦽"}
+          <div className="h-56 bg-gradient-to-br from-brand-50 to-brand-100 flex items-center justify-center text-6xl overflow-hidden">
+            {resource.images && resource.images.length > 0 ? (
+              <img
+                src={resource.images[activeImage]}
+                alt={resource.title}
+                className="w-full h-full object-cover"
+              />
+            ) : resource.category === "blood" ? (
+              "🩸"
+            ) : resource.category === "medicine" ? (
+              "💊"
+            ) : (
+              "🦽"
+            )}
           </div>
+
+          {resource.images && resource.images.length > 1 && (
+            <div className="flex gap-2 p-3 bg-white border-t border-slate-100">
+              {resource.images.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveImage(i)}
+                  className={`h-14 w-14 rounded-md overflow-hidden border-2 ${
+                    activeImage === i
+                      ? "border-brand-600"
+                      : "border-transparent"
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="p-8">
             <div className="flex items-center gap-2 mb-3">
@@ -173,9 +213,19 @@ function ResourceDetail() {
             )}
 
             {isOwner && (
-              <p className="text-sm text-slate-400 italic">
-                This is your own listing.
-              </p>
+              <div className="flex items-center gap-3">
+                <p className="text-sm text-slate-400 italic">
+                  This is your own listing.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDelete}
+                  className="text-red-600 border-red-200 hover:bg-red-50"
+                >
+                  Delete Listing
+                </Button>
+              </div>
             )}
           </div>
         </div>

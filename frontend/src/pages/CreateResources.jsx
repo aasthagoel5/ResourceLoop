@@ -24,10 +24,21 @@ function CreateResource() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [images, setImages] = useState([]);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleImageChange = (e) => {
+    const newFiles = Array.from(e.target.files);
+    setImages((prev) => [...prev, ...newFiles].slice(0, 5)); // append, cap at 5 total
+    e.target.value = ""; // reset so the same input can be used again to add more
+  };
+
+  const removeImage = (index) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
@@ -40,31 +51,44 @@ function CreateResource() {
       setLoading(false);
       return;
     }
+    if (
+      (formData.category === "equipment" || formData.category === "medicine") &&
+      images.length === 0
+    ) {
+      setError("Please upload at least one photo for this category.");
+      setLoading(false);
+      return;
+    }
 
     try {
-      const payload = {
-        title: formData.title,
-        description: formData.description,
-        category: formData.category,
-        listingType: formData.listingType,
-        quantity: Number(formData.quantity),
-        latitude: Number(formData.latitude),
-        longitude: Number(formData.longitude),
-        address: formData.address,
-      };
+      const payload = new FormData();
+      payload.append("title", formData.title);
+      payload.append("description", formData.description);
+      payload.append("category", formData.category);
+      payload.append("listingType", formData.listingType);
+      payload.append("quantity", formData.quantity);
+      payload.append("latitude", formData.latitude);
+      payload.append("longitude", formData.longitude);
+      payload.append("address", formData.address);
 
       if (formData.category === "blood")
-        payload.bloodGroup = formData.bloodGroup;
+        payload.append("bloodGroup", formData.bloodGroup);
       if (formData.category === "equipment")
-        payload.condition = formData.condition;
+        payload.append("condition", formData.condition);
       if (formData.category === "medicine")
-        payload.expiryDate = formData.expiryDate;
+        payload.append("expiryDate", formData.expiryDate);
       if (formData.listingType === "sell")
-        payload.price = Number(formData.price);
+        payload.append("price", formData.price);
       if (formData.listingType === "lend")
-        payload.securityDeposit = Number(formData.securityDeposit);
+        payload.append("securityDeposit", formData.securityDeposit);
 
-      await api.post("/resources", payload);
+      // Attach each selected image file
+      images.forEach((file) => payload.append("images", file));
+
+      await api.post("/resources", payload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       navigate("/resources");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create listing.");
@@ -103,6 +127,52 @@ function CreateResource() {
               value={formData.description}
               onChange={handleChange}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="images">
+              Photos{" "}
+              {(formData.category === "equipment" ||
+                formData.category === "medicine") && (
+                <span className="text-red-500">*</span>
+              )}{" "}
+              (up to 5)
+            </Label>
+
+            {images.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-2">
+                {images.map((file, i) => (
+                  <div key={i} className="relative">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt=""
+                      className="h-16 w-16 object-cover rounded-md border border-slate-200"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(i)}
+                      className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {images.length < 5 && (
+              <input
+                id="images"
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageChange}
+                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100"
+              />
+            )}
+            <p className="text-xs text-slate-400">
+              {images.length}/5 photos selected
+            </p>
           </div>
 
           <div className="space-y-2">

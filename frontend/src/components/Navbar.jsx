@@ -55,16 +55,16 @@ function Navbar() {
                 My Donations
               </Link>
               <Link
-                to="/profile"
-                className="text-sm text-slate-600 hover:text-brand-600 hidden sm:inline"
-              >
-                Hi, {user.name.split(" ")[0]}
-              </Link>
-              <Link
                 to="/nearby"
                 className="hover:text-brand-600 transition-colors"
               >
                 Near Me
+              </Link>
+              <Link
+                to="/wishlist"
+                className="hover:text-brand-600 transition-colors"
+              >
+                Wishlist
               </Link>
               {user?.role === "admin" && (
                 <Link
@@ -81,9 +81,6 @@ function Navbar() {
         <div className="flex items-center gap-3">
           {user ? (
             <>
-              <span className="text-sm text-slate-600 hidden sm:inline">
-                Hi, {user.name.split(" ")[0]}
-              </span>
               <NotificationBell />
               <Link
                 to="/profile"

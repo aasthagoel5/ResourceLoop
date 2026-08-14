@@ -4,9 +4,10 @@ const { register, login, verifyEmail , forgotPassword, resetPassword, refreshTok
 const protect = require("../middleware/authMiddleware");
 const passport = require("../config/passport");
 const {generateAccessToken, generateRefreshToken } = require("../utils/generateTokens");
+const { uploadDocument } = require("../middleware/upload");
 
 // POST /api/auth/register -> calls register controller
-router.post("/register", register);
+router.post("/register", uploadDocument.single("document"), register);
 
 // POST /api/auth/login -> calls login controller
 router.post("/login", login);

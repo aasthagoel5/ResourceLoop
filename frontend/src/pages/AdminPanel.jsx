@@ -79,6 +79,18 @@ function PendingHospitals() {
             <p className="text-xs text-slate-400">
               Reg #: {h.registrationNumber} · {h.address}
             </p>
+            {h.verificationDocuments ? (
+              <a
+                href={h.verificationDocuments}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-brand-600 hover:underline"
+              >
+                View Document →
+              </a>
+            ) : (
+              <p className="text-xs text-red-500">No document uploaded</p>
+            )}
           </div>
           <div className="flex gap-2">
             <Button size="sm" onClick={() => handleVerify(h._id, "verified")}>
@@ -132,13 +144,25 @@ function PendingNGOs() {
           className="bg-white rounded-xl border border-slate-200 p-4 flex items-center justify-between"
         >
           <div>
-            <p className="font-semibold text-slate-800">{n.organizationName}</p>
+            <p className="font-semibold text-slate-800">{h.hospitalName}</p>
             <p className="text-sm text-slate-500">
               {n.userId?.name} · {n.userId?.email}
             </p>
             <p className="text-xs text-slate-400">
-              Reg ID: {n.registrationId} · {n.address}
+              Reg #: {n.registrationNumber} · {n.address}
             </p>
+            {n.verificationDocuments ? (
+              <a
+                href={h.verificationDocuments}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-brand-600 hover:underline"
+              >
+                View Document →
+              </a>
+            ) : (
+              <p className="text-xs text-red-500">No document uploaded</p>
+            )}
           </div>
           <div className="flex gap-2">
             <Button size="sm" onClick={() => handleVerify(n._id, "verified")}>
@@ -189,25 +213,48 @@ function PendingResources() {
       {resources.map((r) => (
         <div
           key={r._id}
-          className="bg-white rounded-xl border border-slate-200 p-4 flex items-center justify-between"
+          className="bg-white rounded-xl border border-slate-200 p-4"
         >
-          <div>
-            <p className="font-semibold text-slate-800">{r.title}</p>
-            <p className="text-sm text-slate-500">
-              {r.donorId?.name} · {r.category} · {r.listingType}
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button size="sm" onClick={() => handleVerify(r._id, "available")}>
-              Approve
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => handleVerify(r._id, "rejected")}
-            >
-              Reject
-            </Button>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex gap-3">
+              {r.images && r.images.length > 0 ? (
+                <div className="flex gap-1">
+                  {r.images.slice(0, 3).map((img, i) => (
+                    <img
+                      key={i}
+                      src={img}
+                      alt=""
+                      className="h-16 w-16 object-cover rounded-md border border-slate-200"
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="h-16 w-16 rounded-md bg-slate-100 flex items-center justify-center text-xs text-slate-400">
+                  No photo
+                </div>
+              )}
+              <div>
+                <p className="font-semibold text-slate-800">{r.title}</p>
+                <p className="text-sm text-slate-500">
+                  {r.donorId?.name} · {r.category} · {r.listingType}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2 shrink-0">
+              <Button
+                size="sm"
+                onClick={() => handleVerify(r._id, "available")}
+              >
+                Approve
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleVerify(r._id, "rejected")}
+              >
+                Reject
+              </Button>
+            </div>
           </div>
         </div>
       ))}

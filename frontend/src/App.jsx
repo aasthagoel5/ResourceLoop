@@ -19,6 +19,7 @@ import Profile from "@/pages/Profile";
 import NearbySearch from "@/pages/NearbySearch";
 import Dashboard from "@/pages/Dashboard";
 import AdminPanel from "@/pages/AdminPanel";
+import Wishlist from "./pages/Wishlist";
 
 function Home() {
   const { user } = useAuth();
@@ -125,6 +126,7 @@ function App() {
         <Route path="/nearby" element={<NearbySearch />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/wishlist" element={<Wishlist />} />
       </Routes>
     </>
   );

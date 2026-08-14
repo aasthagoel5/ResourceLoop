@@ -13,6 +13,7 @@ function RequestDetail() {
   const [loading, setLoading] = useState(true);
   const [offering, setOffering] = useState(false);
   const [message, setMessage] = useState("");
+  const [activeImage, setActiveImage] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -37,6 +38,16 @@ function RequestDetail() {
       console.error("Failed to load request:", error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm("Delete this request permanently?")) return;
+    try {
+      await api.delete(`/requests/${id}`);
+      navigate("/requests");
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to delete request.");
     }
   };
 
@@ -125,9 +136,19 @@ function RequestDetail() {
           )}
 
           {isOwnRequest && (
-            <p className="text-sm text-slate-400 italic">
-              This is your own request.
-            </p>
+            <div className="flex items-center gap-3">
+              <p className="text-sm text-slate-400 italic">
+                This is your own request.
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDelete}
+                className="text-red-600 border-red-200 hover:bg-red-50"
+              >
+                Delete Request
+              </Button>
+            </div>
           )}
 
           {!isOwnRequest && user && (
