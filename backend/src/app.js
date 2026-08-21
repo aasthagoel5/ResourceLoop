@@ -16,7 +16,7 @@ const reportRoutes = require("./routes/reportRoutes");
 //Middleware
 app.use(express.json());
 app.use(cors({
-  origin: "http://localhost:5173", credentials: true,}));
+  origin: ["http://localhost:5173", "https://resource-loop-eta.vercel.app"], credentials: true,}));
 app.use(passport.initialize());
 
 // Any request starting with /api/auth will be handled by authRoutes

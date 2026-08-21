@@ -66,8 +66,8 @@ router.get(
       // with the tokens attached, e.g.:
       // res.redirect(`http://localhost:3000/oauth-success?accessToken=${accessToken}&refreshToken=${refreshToken}`
       res.redirect(
-        `http://localhost:5173/oauth-success?accessToken=${accessToken}&refreshToken=${refreshToken}`
-      )
+        `${process.env.FRONTEND_URL || "http://localhost:5173"}/oauth-success?accessToken=${accessToken}&refreshToken=${refreshToken}`
+      );
     } catch (error) {
       res.redirect(`http://localhost:5173/login?error=oauth_failed`);
     }
