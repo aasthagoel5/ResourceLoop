@@ -50,6 +50,9 @@ exports.createDonation = async (req, res) => {
       status: "pending",
     });
 
+    donation.timeline = [{ status: "pending" }];
+    await donation.save();
+
     // Lock the resource so it can't be claimed by someone else simultaneously
     resource.status = "reserved";
     await resource.save();
@@ -110,6 +113,7 @@ exports.completeDonation = async (req, res) => {
   return res.status(400).json({ message: "Donation must be accepted by the receiver before it can be marked completed" });
     }
     donation.status = "completed";
+    donation.timeline.push({ status: "completed" });
     await donation.save();
 
     // Update the linked Resource
@@ -162,6 +166,7 @@ exports.cancelDonation = async (req, res) => {
     }
 
     donation.status = "cancelled";
+    donation.timeline.push({ status: "cancelled" });
     await donation.save();
 
     // Release the resource back to available
@@ -205,9 +210,36 @@ exports.acceptDonation = async (req, res) => {
     }
 
     donation.status = "accepted";
+    donation.timeline.push({ status: "accepted" });
     await donation.save();
 
     res.status(200).json({ message: "Donation accepted", donation });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+// @route  PUT /api/donations/:id/note
+// @desc   Add or update a coordination note (either party can do this)
+exports.updateNote = async (req, res) => {
+  try {
+    const { note } = req.body;
+    const donation = await Donation.findById(req.params.id);
+
+    if (!donation) {
+      return res.status(404).json({ message: "Donation not found" });
+    }
+
+    const userId = req.user.userId;
+    if (donation.donorId.toString() !== userId && donation.receiverId.toString() !== userId) {
+      return res.status(403).json({ message: "You are not part of this donation" });
+    }
+
+    donation.coordinationNote = note;
+    await donation.save();
+
+    res.status(200).json({ message: "Note updated", donation });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -35,6 +35,21 @@ const donationSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+
+  // A simple free-text note either party can add — stands in for OLX-style
+  // chat coordination (meetup time/place), without building full messaging
+  coordinationNote: {
+    type: String,
+  },
+
+  // Timeline of every status change, so we can show real history
+  // (e.g. "Accepted on Aug 14, 3:15 PM") instead of just the current state
+  timeline: [
+    {
+      status: String,
+      timestamp: { type: Date, default: Date.now },
+    },
+  ],
 },{ timestamps: true 
 }
 );

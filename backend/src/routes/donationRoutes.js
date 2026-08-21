@@ -9,6 +9,7 @@ const {
   acceptDonation,
   completeDonation,
   cancelDonation,
+  updateNote,
 } = require("../controllers/donationController");
 
 //All the donation routes require login -  donations are personal transactions not public browsing
@@ -19,5 +20,7 @@ router.put("/:id/complete",protect, completeDonation);
 router.put("/:id/cancel",protect, cancelDonation);
 
 router.put("/:id/accept", protect, acceptDonation);
+
+router.put("/:id/note", protect, updateNote);
 
 module.exports = router;
