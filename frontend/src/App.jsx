@@ -19,7 +19,8 @@ import Profile from "@/pages/Profile";
 import NearbySearch from "@/pages/NearbySearch";
 import Dashboard from "@/pages/Dashboard";
 import AdminPanel from "@/pages/AdminPanel";
-import Wishlist from "./pages/Wishlist";
+import Wishlist from "@/pages/Wishlist";
+import NotFound from "@/pages/NotFound";
 
 function Home() {
   const { user } = useAuth();
@@ -127,6 +128,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

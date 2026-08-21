@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "@/services/api";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 function Wishlist() {
   const [saved, setSaved] = useState([]);
@@ -30,12 +31,7 @@ function Wishlist() {
     }
   };
 
-  if (loading)
-    return (
-      <div className="min-h-screen flex items-center justify-center text-slate-500">
-        Loading...
-      </div>
-    );
+  if (loading) return <LoadingSpinner fullScreen={false} />;
 
   return (
     <div className="min-h-screen bg-slate-50">

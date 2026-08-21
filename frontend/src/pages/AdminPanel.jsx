@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "@/services/api";
 import { Button } from "@/components/ui/button";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const TABS = ["hospitals", "ngos", "resources", "users", "reports"];
 
@@ -60,7 +61,7 @@ function PendingHospitals() {
     fetchData();
   };
 
-  if (loading) return <p className="text-slate-500">Loading...</p>;
+  if (loading) return <LoadingSpinner fullScreen={false} />;
   if (hospitals.length === 0)
     return <p className="text-slate-500">No pending hospitals.</p>;
 
@@ -132,7 +133,7 @@ function PendingNGOs() {
     fetchData();
   };
 
-  if (loading) return <p className="text-slate-500">Loading...</p>;
+  if (loading) return <LoadingSpinner fullScreen={false} />;
   if (ngos.length === 0)
     return <p className="text-slate-500">No pending NGOs.</p>;
 
@@ -204,7 +205,7 @@ function PendingResources() {
     fetchData();
   };
 
-  if (loading) return <p className="text-slate-500">Loading...</p>;
+  if (loading) return <LoadingSpinner fullScreen={false} />;
   if (resources.length === 0)
     return <p className="text-slate-500">No pending resources.</p>;
 
@@ -289,7 +290,7 @@ function AllUsers() {
     }
   };
 
-  if (loading) return <p className="text-slate-500">Loading...</p>;
+  if (loading) return <LoadingSpinner fullScreen={false} />;
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
@@ -348,7 +349,7 @@ function Reports() {
     fetchData();
   };
 
-  if (loading) return <p className="text-slate-500">Loading...</p>;
+  if (loading) return <LoadingSpinner fullScreen={false} />;
   if (reports.length === 0)
     return <p className="text-slate-500">No pending reports.</p>;
 

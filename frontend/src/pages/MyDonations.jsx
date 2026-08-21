@@ -3,6 +3,7 @@ import api from "@/services/api";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import DonationStepper from "@/components/DonationStepper";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 function MyDonations() {
   const { user } = useAuth();
@@ -61,12 +62,7 @@ function MyDonations() {
     }
   };
 
-  if (loading)
-    return (
-      <div className="min-h-screen flex items-center justify-center text-slate-500">
-        Loading...
-      </div>
-    );
+  if (loading) return <LoadingSpinner fullScreen={false} />;
 
   return (
     <div className="min-h-screen bg-slate-50">

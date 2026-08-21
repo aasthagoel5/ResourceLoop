@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "@/services/api";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 function RequestDetail() {
   const { id } = useParams();
@@ -68,12 +69,7 @@ function RequestDetail() {
     }
   };
 
-  if (loading)
-    return (
-      <div className="min-h-screen flex items-center justify-center text-slate-500">
-        Loading...
-      </div>
-    );
+  if (loading) return <LoadingSpinner fullScreen={false} />;
   if (!request)
     return (
       <div className="min-h-screen flex items-center justify-center text-slate-500">

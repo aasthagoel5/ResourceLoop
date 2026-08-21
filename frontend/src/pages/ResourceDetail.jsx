@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const listingBadge = {
   donate: { label: "Donate", className: "bg-rose-100 text-rose-700" },
@@ -58,11 +59,7 @@ function ResourceDetail() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-slate-500">
-        Loading...
-      </div>
-    );
+    return <LoadingSpinner fullScreen={false} />;
   }
 
   if (!resource) {

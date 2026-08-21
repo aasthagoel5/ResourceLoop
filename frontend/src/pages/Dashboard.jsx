@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import api from "@/services/api";
 import { useAuth } from "@/context/AuthContext";
 import StatCard from "@/components/StatCard";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 function Dashboard() {
   const { user } = useAuth();
@@ -24,12 +25,7 @@ function Dashboard() {
     }
   };
 
-  if (loading)
-    return (
-      <div className="min-h-screen flex items-center justify-center text-slate-500">
-        Loading...
-      </div>
-    );
+  if (loading) return <LoadingSpinner fullScreen={false} />;
   if (!data)
     return (
       <div className="min-h-screen flex items-center justify-center text-slate-500">

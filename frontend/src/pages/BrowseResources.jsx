@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "@/services/api";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const listingBadge = {
   donate: { label: "Donate", className: "bg-rose-100 text-rose-700" },
@@ -106,7 +107,7 @@ function BrowseResources() {
         </div>
 
         {loading ? (
-          <p className="text-slate-500">Loading resources...</p>
+          <LoadingSpinner fullScreen={false} />
         ) : resources.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-slate-500">No resources found.</p>

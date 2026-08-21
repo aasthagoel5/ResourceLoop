@@ -4,6 +4,7 @@ import api from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 function Profile() {
   const [profile, setProfile] = useState(null);
@@ -21,12 +22,13 @@ function Profile() {
 
   const fetchAll = async () => {
     try {
-      const [profileRes, donationsRes, requestsRes, savedRes] = await Promise.all([
-        api.get("/users/me"),
-        api.get("/users/me/donations"),
-        api.get("/users/me/requests"),
-        api.get("/users/me/saved-resources"),
-      ]);
+      const [profileRes, donationsRes, requestsRes, savedRes] =
+        await Promise.all([
+          api.get("/users/me"),
+          api.get("/users/me/donations"),
+          api.get("/users/me/requests"),
+          api.get("/users/me/saved-resources"),
+        ]);
       setProfile(profileRes.data.user);
       setFormData({
         name: profileRes.data.user.name,
@@ -59,7 +61,7 @@ function Profile() {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center text-slate-500">Loading...</div>;
+  if (loading) return <LoadingSpinner fullScreen={false} />;
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -74,7 +76,9 @@ function Profile() {
                 {profile.name?.charAt(0).toUpperCase()}
               </div>
               <div>
-                <h2 className="font-semibold text-lg text-slate-900">{profile.name}</h2>
+                <h2 className="font-semibold text-lg text-slate-900">
+                  {profile.name}
+                </h2>
                 <p className="text-sm text-slate-500">{profile.email}</p>
               </div>
             </div>
@@ -93,33 +97,62 @@ function Profile() {
             <form onSubmit={handleSave} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone</Label>
-                <Input id="phone" name="phone" value={formData.phone} onChange={handleChange} />
+                <Input
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                />
               </div>
               <div className="flex gap-2">
                 <Button type="submit">Save Changes</Button>
-                <Button type="button" variant="outline" onClick={() => setEditing(false)}>Cancel</Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setEditing(false)}
+                >
+                  Cancel
+                </Button>
               </div>
             </form>
           ) : (
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-slate-400">Phone</p>
-                <p className="font-medium text-slate-800">{profile.phone || "Not set"}</p>
+                <p className="font-medium text-slate-800">
+                  {profile.phone || "Not set"}
+                </p>
               </div>
               <div>
                 <p className="text-slate-400">Location</p>
-                <p className="font-medium text-slate-800">{profile.location?.address || "Not set"}</p>
+                <p className="font-medium text-slate-800">
+                  {profile.location?.address || "Not set"}
+                </p>
               </div>
               <div>
                 <p className="text-slate-400">Trust Score</p>
-                <p className="font-medium text-slate-800">{profile.trustScore}</p>
+                <p className="font-medium text-slate-800">
+                  {profile.trustScore}
+                </p>
               </div>
               <div className="flex items-end">
-                <Button size="sm" variant="outline" onClick={() => setEditing(true)}>Edit Profile</Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setEditing(true)}
+                >
+                  Edit Profile
+                </Button>
               </div>
             </div>
           )}
@@ -147,7 +180,12 @@ function Profile() {
             <EmptyState text="No requests yet." />
           ) : (
             requests.map((r) => (
-              <RowItem key={r._id} title={r.title} subtitle={r.location?.address} status={r.status} />
+              <RowItem
+                key={r._id}
+                title={r.title}
+                subtitle={r.location?.address}
+                status={r.status}
+              />
             ))
           )}
         </Section>
@@ -164,7 +202,9 @@ function Profile() {
                 className="block border border-slate-200 rounded-md p-3 hover:bg-slate-50 mb-2"
               >
                 <p className="font-medium text-sm text-slate-800">{r.title}</p>
-                <p className="text-xs text-slate-400 capitalize">{r.category}</p>
+                <p className="text-xs text-slate-400 capitalize">
+                  {r.category}
+                </p>
               </Link>
             ))
           )}
@@ -178,7 +218,9 @@ function Section({ title, children }) {
   return (
     <div className="mb-8">
       <h2 className="font-semibold text-slate-800 mb-3">{title}</h2>
-      <div className="bg-white rounded-xl border border-slate-200 p-4">{children}</div>
+      <div className="bg-white rounded-xl border border-slate-200 p-4">
+        {children}
+      </div>
     </div>
   );
 }
@@ -203,7 +245,9 @@ function RowItem({ title, subtitle, status }) {
         <p className="text-sm font-medium text-slate-800">{title}</p>
         {subtitle && <p className="text-xs text-slate-400">{subtitle}</p>}
       </div>
-      <span className={`text-xs font-medium px-2 py-1 rounded-full capitalize ${statusColor[status] || "bg-slate-100 text-slate-500"}`}>
+      <span
+        className={`text-xs font-medium px-2 py-1 rounded-full capitalize ${statusColor[status] || "bg-slate-100 text-slate-500"}`}
+      >
         {status}
       </span>
     </div>

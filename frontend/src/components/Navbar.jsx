@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -6,6 +8,8 @@ import NotificationBell from "./NotificationBell";
 function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -111,7 +115,77 @@ function Navbar() {
             </>
           )}
         </div>
+        {/* Mobile menu toggle - only shows below md breakpoint */}
+        <button
+          className="md:hidden p-2"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? "✕" : "☰"}
+        </button>
       </div>
+
+      {mobileMenuOpen && user && (
+        <div className="md:hidden border-t border-slate-200 bg-white px-6 py-4 space-y-3">
+          <Link
+            to="/resources"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm text-slate-600"
+          >
+            Browse
+          </Link>
+          <Link
+            to="/requests"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm text-slate-600"
+          >
+            Requests
+          </Link>
+          <Link
+            to="/donations"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm text-slate-600"
+          >
+            My Donations
+          </Link>
+          <Link
+            to="/wishlist"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm text-slate-600"
+          >
+            Wishlist
+          </Link>
+          <Link
+            to="/nearby"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm text-slate-600"
+          >
+            Near Me
+          </Link>
+          <Link
+            to="/dashboard"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm text-slate-600"
+          >
+            Dashboard
+          </Link>
+          <Link
+            to="/profile"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm text-slate-600"
+          >
+            Profile
+          </Link>
+          {user?.role === "admin" && (
+            <Link
+              to="/admin"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm text-slate-600"
+            >
+              Admin
+            </Link>
+          )}
+        </div>
+      )}
     </header>
   );
 }

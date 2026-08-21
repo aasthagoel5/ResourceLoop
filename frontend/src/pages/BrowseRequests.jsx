@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "@/services/api";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const urgencyBadge = {
   low: "bg-slate-100 text-slate-600",
@@ -95,7 +96,7 @@ function BrowseRequests() {
         </div>
 
         {loading ? (
-          <p className="text-slate-500">Loading requests...</p>
+          <LoadingSpinner fullScreen={false} />
         ) : requests.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-slate-500">No requests found.</p>
