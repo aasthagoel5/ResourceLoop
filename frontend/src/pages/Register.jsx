@@ -273,6 +273,12 @@ function Register() {
             )}
           </>
         )}
+        {loading && (
+          <p className="text-xs text-slate-400 text-center">
+            First request may take up to a minute if the server was recently
+            idle...
+          </p>
+        )}
 
         {error && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-2">
