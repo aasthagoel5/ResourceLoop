@@ -1,25 +1,25 @@
-const { Resend } = require("resend");
+const SibApiV3Sdk = require("sib-api-v3-sdk");
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+const apiKey = defaultClient.authentications["api-key"];
+apiKey.apiKey = process.env.BREVO_API_KEY;
 
-// This function sends an email using Resend's API (HTTPS-based,
-// works reliably from cloud hosts like Render, unlike SMTP which
-// is often blocked on free tiers)
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+// This function sends an email using Brevo's API (HTTPS-based,
+// works reliably from cloud hosts, and allows sending to any
+// verified recipient once the sender itself is verified)
 const sendEmail = async (to, subject, html) => {
   try {
-    const { data, error } = await resend.emails.send({
-      from: "ResourceLoop <onboarding@resend.dev>", // Resend's free testing sender
-      to,
+    const sendSmtpEmail = {
+      sender: { name: "ResourceLoop", email: "aasthagoel.as@gmail.com" },
+      to: [{ email: to }],
       subject,
-      html,
-    });
+      htmlContent: html,
+    };
 
-    if (error) {
-      console.error("Email sending failed:", error);
-      throw new Error(error.message || "Email sending failed");
-    }
-
-    console.log(`Email sent to ${to}`, data);
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log(`Email sent to ${to}`, response.messageId);
   } catch (error) {
     console.error("Email sending failed:", error.message);
     throw error;
